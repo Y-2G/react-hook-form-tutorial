@@ -1,32 +1,35 @@
 import React from "react";
-import ReactDOM from "react-dom"
 import { useForm } from "react-hook-form";
 
-type GenderEnum = {
-  female: "female",
-  male: "male",
-  other: "other",
-};
+const Input = ({ label, register, required }: any ) => ( 
+  <>
+    <label>{label}</label>
+    <input name={label} ref={register({ required })} />
+  </>
+);
 
-interface IFormInput {
-  firstName: String;
-  gender: GenderEnum;
-}
+const Select = React.forwardRef(({ label }: any, ref: any) => (
+  <>
+    <label>{label}</label>
+    <select name={label} ref={ref}>
+      <option value="20">20</option>
+      <option value="30">30</option>
+    </select>
+  </>
+))
 
-export default function App() {
-  const { register, handleSubmit } = useForm<IFormInput>();
-  const onSubmit = (data: IFormInput) => console.log(data);
+const App = () => {
+  const { register, handleSubmit } = useForm();
+  const onSubmit = (data: any)=> console.log(data);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input name="firstName" ref={register} />
-      <label>Gender Selection</label>
-      <select name="gender" ref={register}>
-        <option value="female">female</option>
-        <option value="male">male</option>
-        <option value="other">other</option>
-      </select>
+      <Input label="First Name" register={register} required />
+      <Select label="Age" ref={register} />
       <input type="submit" />
     </form>
-  );
+  )
+
 }
+
+export default App
