@@ -1,56 +1,63 @@
 import React from "react";
-import Select from "react-select";
-import Input from "@material-ui/core/Input";
-import { Input as InputField } from "antd";
-import { useForm, Controller } from "react-hook-form";
+import ReactSelect from "react-select";
+import { TextField, Checkbox } from "@material-ui/core";
+import { useForm, Controller, useController } from "react-hook-form";
 
+// ========== COMPONENT ========== 
+
+// const App = () => {
+//   const methods = useForm();
+//   const  { handleSubmit, control, reset } = methods;
+//   const onSubmit = (data: any) => console.log(data);
+
+//   return (
+//     <form onSubmit={handleSubmit(onSubmit)}>
+//       <Controller as={TextField} name="TextField" control={control} defaultValue="" />
+
+//       <Controller
+//         name="MyCheckbox"
+//         control={control}
+//         defaultValue={false}
+//         rules={{ required: true }}
+//         render={props => 
+//           <Checkbox
+//             onChange={ e => props.onChange(e.target.checked)}
+//             checked={props.value}
+//           />
+//         }
+//       />
+
+//       <input type="submit" />
+//     </form>
+//   )
+// }
+
+// ========== HOOK ========== 
+
+const Input = ({ control, name }: any) => {
+  const {
+    field: { ref, ...inputProps },
+    meta: { invalid, isTouched, isDirty },
+  } = useController({
+    name,
+    control,
+    rules: { required: true },
+    defaultValue: "",
+  });
+
+  return <TextField {...inputProps} inputRef={ref} />
+}
 
 const App = () => {
-  const { control, handleSubmit, setValue, register } = useForm();
+  const { handleSubmit, control } = useForm();
   const onSubmit = (data: any) => console.log(data);
-
-  const handleChange = (e: any) => {
-    setValue("AntdInput", e.target.value);
-  }
-
-  React.useEffect(() => {
-    register("AntdInput")
-  }, [register])
-
+  
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Controller 
-        name="componetName"
-        control={control}
-        defaultValue=""
-        render={({ onChange, value }) => <input onChange={onChange} value={value} />}
-      />
-
-      <Controller 
-        name="muiName"
-        control={control}
-        defaultValue=""
-        as={<Input name="muiName" />}
-        // render={({ onChange, value }) => <Input onChange={onChange} value={value} />}
-      />
-
-      <InputField name="antdName" onChange={handleChange} />
-
-      <Controller 
-        name="iceCreamType"
-        control={control}
-        options={[
-          { value: "chocolate", label: "Chocolate" },
-          { value: "strawberry", label: "Strawberry" },
-          { value: "vanilla", label: "Vanilla" }
-        ]}
-        as={Select}
-      />
-
+      <Input name="firstName" control={control} />
       <input type="submit" />
     </form>
-  )
-
+  );
 }
 
 export default App
