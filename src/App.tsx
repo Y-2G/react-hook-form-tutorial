@@ -1,17 +1,27 @@
 import React from "react";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 
+const schema = yup.object().shape({
+  firstName: yup.string().required(),
+  age: yup.number().positive().integer().required(),
+});
 
 const App = () => {
-  const { register, errors, handleSubmit } = useForm();
+  const { register, handleSubmit, errors } = useForm({
+    resolver: yupResolver(schema)
+  });
   const onSubmit = (data: any) => console.log(data);
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <input name="firstName" ref={register({ required: true })} />
-      {errors.firstName && "First name is required"}
-      <input name="lastName"  ref={register({ required: true })} />
-      {errors.lastName && "Last name is required"}
+      <input type="text" name="firstName" ref={register} />
+      <p>{errors.firstName?.message}</p>
+
+      <input type="text" name="age" ref={register} />
+      <p>{errors.age?.message}</p>
+
       <input type="submit" />
     </form>
   );
